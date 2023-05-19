@@ -1,37 +1,48 @@
+# frozen_string_literal: true
 require_relative 'test_helper'
 require_relative '../lib/priority_queue_bh'
 require_relative '../lib/item'
 
-
 class PriorityQueueBHTest < Minitest::Test
   def setup
     @pq = PriorityQueueBH.new
-    items = [ Item.new(label: 'A', priority: 2),
-              Item.new(label: 'B', priority: 1),
-              Item.new(label: 'C', priority: 4),
-              Item.new(label: 'D', priority: 6),
-              Item.new(label: 'E', priority: 3) ]
-    items.each {|item| @pq << item }
+    @pq.insert(Item.new(label: 'b', priority: 2))
+    @pq.insert(Item.new(label: 'x', priority: 6))
+    @pq.insert(Item.new(label: 'y', priority: 6))
+    @pq.insert(Item.new(label: 'z', priority: 3))
+    @pq.insert(Item.new(label: 'w', priority: 3))
+    @pq.insert(Item.new(label: 'r', priority: 10))
   end
 
-  def test_adds_item_in_correct_order
-    expect = ['nil','D','C','A','B','E']
-    actual = @pq.q.map {|itm| itm ? itm.label : 'nil'}
-    assert_equal expect, actual
+  def test_empty_returns_true_when_there_are_no_items_in_the_queue
+    assert PriorityQueueBH.new.empty?
   end
 
-  def test_removes_top_priority_item
-    assert_equal 6, @pq.pull_highest.priority
-    expect= ['nil','C','E','A','B']
-    actual = @pq.q.map {|itm| itm ? itm.label : 'nil'}
-    assert_equal expect, actual
+  def test_empty_returns_false_when_the_queue_contains_items
+    refute @pq.empty?
   end
 
-  def test_finds_highest_priority_item
-    assert_equal 'D', @pq.find_highest.label
+  def test_correctly_pulls_highest_items_returning_nil_when_empty
+    assert_includes ['r'],     @pq.pull_highest.label
+    assert_includes ['x','y'], @pq.pull_highest.label
+    assert_includes ['x','y'], @pq.pull_highest.label
+    assert_includes ['z','w'], @pq.pull_highest.label
+    assert_includes ['z','w'], @pq.pull_highest.label
+    assert_includes ['b'],     @pq.pull_highest.label
+    assert_nil    @pq.pull_highest
+    assert @pq.empty?
   end
 
-  def test_can_clear_the_queue
-    assert_equal [nil], @pq.clear
+  def test_find_highest_returns_an_item_with_highest_priority
+    assert_includes ['r'], @pq.find_highest.label
+  end
+
+  def test_find_highest_returns_nil_for_empty_queue
+    assert_nil PriorityQueueBH.new.find_highest
+  end
+
+  def test_clear_empties_the_priority_queue
+    @pq.clear
+    assert @pq.empty?
   end
 end

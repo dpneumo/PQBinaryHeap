@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class PriorityQueueBH
   # Based on a binary heap
   # Does NOT guarantee members of the queue are unique
@@ -47,14 +48,15 @@ class PriorityQueueBH
   def bubble_down(index)
     child_index = (index * 2)
     return if child_index > max_index
-    return if @q[index] >= @q[highest_priority_child_ndx(child_index)]
+    child_index = highest_priority_child_ndx(child_index)
+    return if @q[index] >= @q[child_index]
     exchange(index, child_index)
     bubble_down(child_index)
   end
 
   def highest_priority_child_ndx(child_index)
     return child_index if child_index == max_index
-    @q[child_index + 1] > @q[child_index] ? child_index += 1 : child_index
+    @q[child_index + 1] > @q[child_index] ? child_index + 1 : child_index
   end
 
   def exchange(source, target)
