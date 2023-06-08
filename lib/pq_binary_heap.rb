@@ -1,10 +1,11 @@
-# frozen_string_literal: true
-class PriorityQueueBH
+class PQBinaryHeap
   # Based on a binary heap
+  # See the Original folder for the Brian Storti gist that is the starting point for this code
   # Does NOT guarantee members of the queue are unique
   # Does NOT guarantee FIFO order of retreived members with same priority
   # insert: O(log #members), find_highest: O(1), pull_highest: O(log #members)
   attr_reader :q
+
   def initialize
     @q = [nil]
   end
@@ -15,17 +16,25 @@ class PriorityQueueBH
   end
   alias_method :<<, :insert
 
+  #NOTE: The pull_highest order for items of equal priority is indeterminant
   def pull_highest
     exchange(1, max_index)
     @q.pop.tap {|_| bubble_down(1) }
   end
 
+  #NOTE: Returns an Item with HIGHEST Priority
+  #      The order for items of equal priority is indeterminant
   def find_highest
     @q[1]
   end
 
   def empty?
     @q.compact.empty?
+
+  end
+
+  def size
+    @q.compact.size
   end
 
   def clear

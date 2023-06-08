@@ -1,8 +1,8 @@
 require 'benchmark'
-require_relative '../lib/priority_queue_bh'
+require_relative '../lib/pq_binary_heap'
 require_relative '../lib/item'
 
-PQvariant = 'PriorityQueueBH'
+PQvariant = 'PQBinaryHeap'
 PQsizes = [100, 1000, 10000, 100000, 1000000]
 MaxPriority = 100
 SampleSize = 100
@@ -16,7 +16,7 @@ end
 
 puts "Priority Queue Variant: #{PQvariant}"
 
-pq = PriorityQueueBH.new
+pq = PQBinaryHeap.new
 PQsizes.each do |qsize|
   puts "\n"
   puts "Queue size: #{qsize}"
@@ -29,16 +29,6 @@ PQsizes.each do |qsize|
     Benchmark.bmbm do |x|
       x.report("find_highest") { SampleSize.times do; pq.find_highest; end }
       x.report("pull_highest") { SampleSize.times do; pq.pull_highest; end }
-    end
-    puts "\n"
-
-    Benchmark.bmbm do |x|
-      x.report("insert") do
-        SampleSize.times do
-          pq.clear
-          qsize.times {|i| pq.insert(items[i]) }
-        end
-      end
     end
     puts "\n"
   end

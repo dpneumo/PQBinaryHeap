@@ -8,7 +8,6 @@ class Item
     @priority = priority
   end
 
-  def <=>(other)
-    priority <=> other.priority
-  end
+  def <=>(other) =  @priority <=> other.priority
+  def to_s       =  @label
 end
